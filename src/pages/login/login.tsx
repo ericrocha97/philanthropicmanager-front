@@ -1,61 +1,64 @@
 import { useContext } from "react";
+import { Container, Row, Col, Card, Form, FloatingLabel, Button, Spinner } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../../contexts/AuthContext";
 
 export default function Login() {
   const { register, handleSubmit } = useForm();
-  const { signIn, error } = useContext(AuthContext);
+  const { signIn, error, isLoading } = useContext(AuthContext);
 
   async function handleSignIn(data: any) {
     await signIn(data);
   }
 
   return (
-    <div className="container py-5 h-100">
-      <div className="row d-flex justify-content-center align-items-center h-100">
-        <div className="col-12 col-md-8 col-lg-6 col-xl-5">
-          <div className="card bg-dark text-white" style={{ borderRadius: "1rem" }}>
-            <form className="card-body p-5 text-center" onSubmit={handleSubmit(handleSignIn)}>
-              <div className="mb-md-5 mt-md-4 pb-5">
-                <h2 className="fw-bold mb-2 text-uppercase">Philanthropic Manager</h2>
-                <p className="text-white-50 mb-5">Please enter your login and password!</p>
-
-                <div className="form-floating mb-4">
-                  <input
-                    {...register("username")}
-                    id="username"
-                    name="username"
-                    type="text"
-                    className="form-control"
-                    required
-                  />
-                  <label className="text-black" htmlFor="username">
-                    Username
-                  </label>
-                </div>
-
-                <div className="form-floating mb-4">
-                  <input
-                    {...register("password")}
-                    id="password"
-                    name="password"
-                    type="password"
-                    className="form-control"
-                    required
-                  />
-                  <label className="text-black" htmlFor="password">
-                    Password
-                  </label>
-                </div>
-                {error && <p className="text-danger">{error}</p>}
-                <button className="btn btn-outline-light btn-lg px-5" type="submit">
-                  Login
-                </button>
+    <Container className="py-5 h-100">
+      <Row className="justify-content-center align-items-center h-100">
+        <Col xl={5} lg={6} md={8} sm={12}>
+          <Card style={{ borderRadius: "1rem" }} bg="dark" text="light">
+            <Card.Body className="p-5 text-center">
+              <div className="mb-md-3 mt-md-4 pb-5">
+                <Form onSubmit={handleSubmit(handleSignIn)}>
+                  <Card.Title className="fw-bold mb-2 text-uppercase">Philanthropic Manager</Card.Title>
+                  <Card.Text className="text-white-50 mb-5">Please enter your login and password!</Card.Text>
+                  <FloatingLabel controlId="floatingUsername" label="Username" className="mb-4 text-black">
+                    <Form.Control
+                      {...register("username")}
+                      id="username"
+                      name="username"
+                      type="text"
+                      required
+                      placeholder="Username"
+                    />
+                  </FloatingLabel>
+                  <FloatingLabel controlId="floatingPassword" label="Password" className="mb-4 text-black">
+                    <Form.Control
+                      {...register("password")}
+                      id="password"
+                      name="password"
+                      type="password"
+                      required
+                      placeholder="Password"
+                    />
+                  </FloatingLabel>
+                  {error && <Card.Text className="text-danger text-center">{error}</Card.Text>}
+                  <div className="d-grid gap-2 col-6 mx-auto">
+                    <Button variant="outline-light" size="lg" disabled={isLoading} className="px-5" type="submit">
+                      {isLoading ? (
+                        <Spinner animation="border" size="sm" role="status"></Spinner>
+                      ) : (
+                        <span role="status" aria-hidden="true">
+                          Login
+                        </span>
+                      )}
+                    </Button>
+                  </div>
+                </Form>
               </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 }

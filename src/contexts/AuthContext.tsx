@@ -26,6 +26,8 @@ type AuthContextType = {
   user: User | null;
   error: string | null;
   signIn: (data: SignInData) => Promise<void>;
+  isLoading: boolean;
+  signOut: () => void;
 };
 
 export const AuthContext = createContext({} as AuthContextType);
@@ -33,6 +35,7 @@ export const AuthContext = createContext({} as AuthContextType);
 export function AuthProvider({ children }: any) {
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const isAuthenticated = !!user;
 
   useEffect(() => {
@@ -49,6 +52,8 @@ export function AuthProvider({ children }: any) {
 
   async function signIn({ username, password }: SignInData) {
     try {
+      setError(null);
+      setIsLoading(true);
       const { data } = await api.post("login", { username, password });
 
       const { token } = data;
@@ -67,12 +72,26 @@ export function AuthProvider({ children }: any) {
       api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
       Router.push("/dashboard");
+      setIsLoading(false);
     } catch (error: any) {
       if (error.response.status === 400) {
         setError(error.response.data.message);
+        setIsLoading(false);
       }
     }
   }
 
-  return <AuthContext.Provider value={{ isAuthenticated, signIn, user, error }}>{children}</AuthContext.Provider>;
+  function signOut() {
+    setUser(null);
+    setCookie(undefined, "philanthropicManager.token", "", {
+      maxAge: -1
+    });
+    Router.push("/");
+  }
+
+  return (
+    <AuthContext.Provider value={{ isAuthenticated, signIn, user, error, isLoading, signOut }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }

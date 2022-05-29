@@ -1,12 +1,31 @@
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
+import { parseCookies } from "nookies";
+import { Container } from "react-bootstrap";
 import Login from "./login/login";
 
 const Home: NextPage = () => {
   return (
-    <section className="vh-100 bg-secondary bg-gradient">
+    <Container>
       <Login />
-    </section>
+    </Container>
   );
 };
 
 export default Home;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { "philanthropicManager.token": token } = parseCookies(ctx);
+
+  if (token) {
+    return {
+      redirect: {
+        destination: "/dashboard",
+        permanent: false
+      }
+    };
+  }
+
+  return {
+    props: {}
+  };
+};
