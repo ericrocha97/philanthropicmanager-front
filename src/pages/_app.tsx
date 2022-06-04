@@ -2,6 +2,7 @@ import "../styles/globals.css";
 import type { AppProps } from "next/app";
 
 import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 import ThemeProvider from "react-bootstrap/ThemeProvider";
 import { AuthProvider } from "../contexts/AuthContext";
 import Head from "next/head";

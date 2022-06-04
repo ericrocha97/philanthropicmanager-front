@@ -21,20 +21,18 @@ export default function Login() {
                 <Form onSubmit={handleSubmit(handleSignIn)}>
                   <Card.Title className="fw-bold mb-2 text-uppercase">Philanthropic Manager</Card.Title>
                   <Card.Text className="text-white-50 mb-5">Please enter your login and password!</Card.Text>
-                  <FloatingLabel controlId="floatingUsername" label="Username" className="mb-4 text-black">
+                  <FloatingLabel controlId="username" label="Username" className="mb-4 text-black">
                     <Form.Control
                       {...register("username")}
-                      id="username"
                       name="username"
                       type="text"
                       required
                       placeholder="Username"
                     />
                   </FloatingLabel>
-                  <FloatingLabel controlId="floatingPassword" label="Password" className="mb-4 text-black">
+                  <FloatingLabel controlId="password" label="Password" className="mb-4 text-black">
                     <Form.Control
                       {...register("password")}
-                      id="password"
                       name="password"
                       type="password"
                       required

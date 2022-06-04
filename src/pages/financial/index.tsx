@@ -1,14 +1,14 @@
 import { GetServerSideProps } from "next";
 import { parseCookies } from "nookies";
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../contexts/AuthContext";
-import { Container, Row, Col, Table } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Container, Row, Col, Table, Button } from "react-bootstrap";
+import Router from "next/router";
 
 import { FinancialTypeData, FinancialTypeMapper } from "../../models/financialType";
 import { api } from "../../services/api";
 
 import Menu from "../../components/menu";
-import FinancialMapper from "../../mappers/financialMapper";
+import { FinancialMapper } from "../../mappers/financialMapper";
 
 export default function Financial() {
   const [data, setData] = useState<FinancialTypeMapper[]>([]);
@@ -21,6 +21,14 @@ export default function Financial() {
       style: "currency",
       currency: "BRL"
     });
+  };
+
+  const sendToFinancialDetails = (id: string) => {
+    Router.push(`/financial/details/${id}`);
+  };
+
+  const sendToNewFinancial = () => {
+    Router.push(`/financial/new`);
   };
 
   useEffect(() => {
@@ -91,26 +99,26 @@ export default function Financial() {
           </Col>
         </Row>
         <Row>
-          <Table hover>
+          <Table className="align-middle" hover borderless style={{ borderRadius: "0.9rem", overflow: "hidden" }}>
             <tbody>
               {data.map((item) => {
                 return (
                   <tr
                     onClick={() => {
-                      alert("abrir item: " + item.id);
+                      sendToFinancialDetails(item.id);
                     }}
                     key={item.id}
                     className={item.type === "debit" ? "bg-danger" : "bg-success"}>
-                    <td>
-                      <Row className="d-flex justify-content-between">
-                        <Col className="text-center">
+                    <td className="d-flex align-middle justify-content-between row">
+                      <Row className="">
+                        <Col className="text-center pt-3">
                           <p>Valor do lançamento:</p>
                         </Col>
-                        <Col className="text-center">
+                        <Col className="text-center pt-3">
                           <p>{formatValue(Number(item.value))}</p>
                         </Col>
                       </Row>
-                      <Row className="d-flex justify-content-between">
+                      <Row className="">
                         <Col className="text-center">
                           <p>Data do lançamento:</p>
                         </Col>
@@ -126,6 +134,22 @@ export default function Financial() {
           </Table>
         </Row>
       </Container>
+
+      <Button
+        style={{
+          position: "fixed",
+          width: 60,
+          height: 60,
+          bottom: 40,
+          right: 40,
+          borderRadius: 50,
+          textAlign: "center",
+          boxShadow: "2px 2px 3px #999"
+        }}
+        variant="dark"
+        onClick={sendToNewFinancial}>
+        <i className="bi bi-plus-lg"></i>
+      </Button>
     </>
   );
 }
